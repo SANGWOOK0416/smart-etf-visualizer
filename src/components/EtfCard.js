@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// 👈 App.js에서 넘겨준 refreshTrigger를 받음!
 function EtfCard({ symbol, apiKey, refreshTrigger }) { 
   const [data, setData] = useState({ price: null, change: null, percent: null });
 
   useEffect(() => {
     const fetchPrice = async () => {
-      // 새로고침 누를 때마다 잠깐 '로딩중' 글씨를 띄우기 위한 센스!
       setData({ price: null, change: null, percent: null }); 
-      
       try {
         const response = await axios.get(
           `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${apiKey}`
@@ -20,40 +17,45 @@ function EtfCard({ symbol, apiKey, refreshTrigger }) {
           percent: response.data.dp
         });
       } catch (error) {
-        console.error(`${symbol} 데이터를 가져오는데 실패했어요!`, error);
+        console.error(`${symbol} 데이터 로딩 실패!`, error);
       }
     };
     fetchPrice();
-  }, [symbol, apiKey, refreshTrigger]); // 🚨 핵심! 이 배열 안에 refreshTrigger를 넣으면, 숫자가 바뀔 때마다 이 코드가 다시 실행됨!
+  }, [symbol, apiKey, refreshTrigger]);
 
   const isPositive = data.change > 0;
-  const color = isPositive ? '#dc3545' : '#007bff'; 
+  const color = isPositive ? '#c84a31' : '#1261c4'; 
   const sign = isPositive ? '+' : '';
 
   return (
     <div style={{
-      border: '1px solid #ddd',
-      borderRadius: '15px',
-      padding: '20px',
-      margin: '10px',
+      /* 🌟 핵심 포인트: 배경색과 테두리를 CSS 변수로 연결! */
+      backgroundColor: 'var(--card-bg)',       
+      border: `1px solid var(--card-border)`,  
+      borderRadius: '8px',
+      padding: '20px', 
+      margin: '10px', 
       width: '180px',
-      backgroundColor: '#fff',
-      boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
-      transition: 'transform 0.2s'
+      transition: 'background-color 0.3s ease, border-color 0.3s ease', 
+      cursor: 'pointer'
     }}>
-      <h3 style={{ margin: '0 0 10px 0', color: '#333', fontSize: '22px' }}>{symbol}</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+        {/* 🌟 글자색도 CSS 변수로 연결! */}
+        <h3 style={{ margin: '0', color: 'var(--text-primary)', fontSize: '18px', fontWeight: 'bold' }}>{symbol}</h3>
+        <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>US</span>
+      </div>
       
       {data.price ? (
-        <>
-          <p style={{ margin: '0', fontSize: '26px', fontWeight: '900' }}>
+        <div style={{ textAlign: 'right' }}>
+          <p style={{ margin: '0', fontSize: '24px', fontWeight: 'bold', color: color }}>
             ${data.price.toFixed(2)}
           </p>
-          <p style={{ margin: '8px 0 0 0', fontSize: '16px', fontWeight: 'bold', color: color }}>
-            {sign}{data.change.toFixed(2)} ({sign}{data.percent.toFixed(2)}%)
+          <p style={{ margin: '5px 0 0 0', fontSize: '14px', fontWeight: '500', color: color }}>
+            {sign}{data.percent.toFixed(2)}% <span style={{fontSize:'12px', color:color}}>{sign}{data.change.toFixed(2)}</span>
           </p>
-        </>
+        </div>
       ) : (
-        <p style={{ color: '#999' }}>데이터 로딩중... ⏳</p>
+        <p style={{ color: 'var(--text-secondary)', textAlign: 'right', margin: 0 }}>로딩중...</p>
       )}
     </div>
   );

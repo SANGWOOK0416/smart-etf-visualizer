@@ -1,38 +1,30 @@
-.App {
-  text-align: center;
+/* ☀️ 라이트 모드 (기본 색상) */
+:root {
+  --bg-color: #f4f5f8;
+  --text-primary: #111111;
+  --text-secondary: #8b95a1;
+  --card-bg: #ffffff;
+  --card-border: #d5d9e0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* 🌙 다크 모드 (토글이 켜지면 덮어쓰는 색상) */
+[data-theme='dark'] {
+  --bg-color: #090a0c;
+  --text-primary: #f4f5f8;
+  --text-secondary: #8b95a1;
+  --card-bg: #181b21;
+  --card-border: #2b2d36;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* 배경과 글자색에 변수 적용 (부드러운 전환 효과 포함) */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  margin: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
